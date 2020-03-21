@@ -1,0 +1,73 @@
+syntax = "proto3";
+
+package flow;
+
+message NdArray {
+    // the actual array data, in bytes
+    bytes data = 1;
+
+    // Specifies the shape (dimensions) of an array
+    repeated uint32 shape = 2 [packed = true];
+
+    // Specifies the data type of an array
+    string dtype = 3;
+}
+
+message Chunk {
+    // indicate where this chunk comes from
+    bytes doc_key = 1;
+
+    // enforce at most one field will be set at the same time
+    oneof content {
+        // the original text of the chunk (only apply to text document)
+        string text = 2;
+
+        // the original ndarry of the chunk (apply to image/video documents)
+        NdArray blob = 3;
+
+        // raw bytes of chunk;
+        bytes raw = 7;
+    }
+
+    // the 1-dim offset of the chunk wrt. the document (apply to text document)
+    uint32 offset = 4;
+
+    // the n-dim offset of the chunk wrt. the document (apply to image/video document)
+    repeated uint32 offset_nd = 5 [packed = true];
+
+    float weight = 6;
+
+    NdArray embedding = 8;
+}
+
+message Document {
+    // The unique document key
+    bytes doc_key = 1;
+
+    // list of the chunks of the document
+    repeated Chunk chunks = 2;
+
+    enum DocType {
+        UNKNOWN = 0;
+        TEXT = 1;
+        IMAGE = 2;
+        VIDEO = 3;
+        AUDIO = 4;
+    }
+
+    // document type
+    DocType doc_type = 3;
+
+    // meta information of this document
+    bytes meta_info = 4;
+    // map<string, bytes> metas = 4;
+
+    // raw information of this document
+    oneof content {
+        string text = 5;
+        NdArray blob = 6;
+        bytes data = 7; // for other type
+    }
+
+    NdArray embedding = 8;
+}
