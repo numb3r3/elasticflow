@@ -15,7 +15,8 @@ base_dep = [
     'numpy',
     'termcolor',
     'protobuf',
-    'python-rocksdb']
+    'python-rocksdb',
+    'rq']
 
 
 setup(

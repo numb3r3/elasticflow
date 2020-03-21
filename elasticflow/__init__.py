@@ -11,8 +11,8 @@ __proto_version__ = '0.1.0'
 from .proto import flow_pb2
 from .store import RocksDB
 
-# # For flake8 compatibility.
-# __all__ = [
-#     flow_pb2,
-#     RocksDB
-# ]
+# For flake8 compatibility.
+__all__ = [
+    'flow_pb2',
+    'RocksDB',
+]
